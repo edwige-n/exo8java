@@ -5,19 +5,23 @@ import com.exo2.Exercice2.entity.Ecole;
 import com.exo2.Exercice2.entity.Etudiant;
 import com.exo2.Exercice2.mapper.EcoleMapper;
 import com.exo2.Exercice2.repository.EcoleRepository;
+import jakarta.persistence.Cacheable;
 import lombok.AllArgsConstructor;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 @Service
+@Cacheable
 @AllArgsConstructor
 public class EcoleService {
     private EcoleRepository ecoleRepository;
     private EcoleMapper ecoleMapper;
 
-    public List<EcoleDto> findAll() {
-        return ecoleMapper.toDtos(ecoleRepository.findAll());
+    public List<EcoleDto> findAll(Pageable pageable) {
+        var response = ecoleRepository.findAll(pageable).getContent();
+        return ecoleMapper.toDtos(response);
     }
 
     public EcoleDto findById(long id) {
